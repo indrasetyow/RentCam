@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".DetailKameraActivity">
+
+    <ImageView
+        android:id="@+id/Imotor"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:src="@drawable/kamera_nikon"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/black"/>
+    <TextView
+        android:id="@+id/Tmotor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="DSLR NIKON"
+        android:textStyle="bold"
+        android:textSize="22sp"
+        android:gravity="center_horizontal"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="6.56"
+            android:text="Nomor Seri   :"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/Tnopol"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="D1300"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="6.56"
+            android:text="Harga Sewa Kamera   :"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/Tharga"
+            android:layout_width="170dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Rp. 100.000"
+
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
