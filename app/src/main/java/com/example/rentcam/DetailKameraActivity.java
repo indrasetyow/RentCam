@@ -10,30 +10,31 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class DetailKameraActivity extends AppCompatActivity {
 
-    protected Cursor cursor;
+    protected Cursor cursor;//inisialisasi cursor
     String sMotor, sHarga, sGambar, sNopol;
-    DataHelper dbHelper;
-    TextView tMotor, tHarga, tNopol;
-    ImageView iGambar;
+    DataHelper dbHelper;//menginisialisasi database
+    TextView tMotor, tHarga, tNopol;//menginisialisasi textview
+    ImageView iGambar;//menginisialisasi imageview
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail_kamera);
+        setContentView(R.layout.activity_detail_kamera);//memanggil layout detail kamera
 
-        getSupportActionBar().setTitle("Detail Kamera");
+        getSupportActionBar().setTitle("Detail Kamera");//memberi judul pada layout
 
-        Bundle terima = getIntent().getExtras();
-        String motor = terima.getString("namo");
+        Bundle terima = getIntent().getExtras();//memberi bundle
+        String motor = terima.getString("namo");//mendeklarasikan kolom kamera
 
-        dbHelper = new DataHelper(this);
-        tMotor = findViewById(R.id.Tmotor);
-        tHarga = findViewById(R.id.Tharga);
-        tNopol = findViewById(R.id.Tnopol);
-        iGambar = findViewById(R.id.Imotor);
+        dbHelper = new DataHelper(this);//memanggil database
+        tMotor = findViewById(R.id.Tmotor);//memanggil id layout
+        tHarga = findViewById(R.id.Tharga);//memanggil id layout
+        tNopol = findViewById(R.id.Tnopol);//memanggil id layout
+        iGambar = findViewById(R.id.Imotor);//memanggil id layout
 
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        cursor = db.rawQuery("select * from kamera where namo = '" + motor + "'", null);
+        //mengambil data kamera
+        SQLiteDatabase db = dbHelper.getReadableDatabase();//untuk membaca database
+        cursor = db.rawQuery("select * from kamera where namo = '" + motor + "'", null);//membuat query membaca kamera
         cursor.moveToFirst();
         if (cursor.getCount() > 0) {
             sMotor = cursor.getString(1);
@@ -41,6 +42,8 @@ public class DetailKameraActivity extends AppCompatActivity {
             sNopol = cursor.getString(3);
         }
 
+
+        //mencocokan nama data dan memasukkan foto kamera
         if (sMotor.equals("Canon EOS 5D Mark IV")) {
             sGambar = "canoneos5d";
         } else if (sMotor.equals("Nikon D330")) {
@@ -65,7 +68,7 @@ public class DetailKameraActivity extends AppCompatActivity {
 
         tMotor.setText(sMotor);
         tNopol.setText(sNopol);
-        iGambar.setImageResource(getResources().getIdentifier(sGambar, "drawable", getPackageName()));
+        iGambar.setImageResource(getResources().getIdentifier(sGambar, "drawable", getPackageName()));//untuk fungsi memasukkan foto menggunakan setImageResource(getResources
         tHarga.setText("Rp. " + sHarga);
 
     }

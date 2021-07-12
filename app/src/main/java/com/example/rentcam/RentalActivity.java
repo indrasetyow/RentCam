@@ -19,44 +19,48 @@ import java.util.Locale;
 
 public class RentalActivity extends AppCompatActivity {
 
-    String[] daftar;
-    ListView ls3;
+    String[] daftar;//menginisialisasikan daftar
+    ListView ls3;//mendeklaarasikan listview
     Menu menu;
-    protected Cursor cursor;
-    DataHelper dbcenter;
-    public static RentalActivity mi;
+    protected Cursor cursor;//menginisialisasikan curosr
+    DataHelper dbcenter;//mendeklarasikan database
+    public static RentalActivity mi;//menginisialisasikan rentalactivity
 
+    //membuat method
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_rental);
+        setContentView(R.layout.activity_rental);//memanggil activity rental
 
-        getSupportActionBar().setTitle("Data Rental");
+        getSupportActionBar().setTitle("Data Rental");//member judul halaman activity
 
         mi = this;
-        dbcenter = new DataHelper(this);
-        RefreshList2();
+        dbcenter = new DataHelper(this);//memanggil database
+        RefreshList2();//memanggil function refreshlist
 
     }
 
+    //membuat method format rupiah
     private String formatRupiah(Double number){
-        Locale localeID = new Locale("in", "ID");
+        Locale localeID = new Locale("in", "ID");//memakai format rupiah indonesia
         NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(localeID);
-        return formatRupiah.format(number);
+        return formatRupiah.format(number);//mengembalikan format nilai
     }
 
+    //membuat fungsi refreshlist
     public void RefreshList2() {
-        SQLiteDatabase db = dbcenter.getReadableDatabase();
-        cursor = db.rawQuery("SELECT kamera.id_kamera, sewa.id_sewa, sewa.tgl, penyewa.nama, kamera.namo, sewa.promo, sewa.lama, sewa.total FROM sewa, penyewa, kamera WHERE sewa.id = penyewa.id AND sewa.id_kamera = kamera.id_kamera ORDER BY id_sewa DESC", null);
-        daftar = new String[cursor.getCount()];
+        SQLiteDatabase db = dbcenter.getReadableDatabase();//membaca database
+        cursor = db.rawQuery("SELECT kamera.id_kamera, sewa.id_sewa, sewa.tgl, penyewa.nama, kamera.namo, sewa.promo, sewa.lama, sewa.total FROM sewa, penyewa, kamera WHERE sewa.id = penyewa.id AND sewa.id_kamera = kamera.id_kamera ORDER BY id_sewa DESC", null);//membuat query semua database
+        daftar = new String[cursor.getCount()];//mengembalikan nilai
         cursor.moveToFirst();
         for (int cc = 0; cc < cursor.getCount(); cc++) {
             cursor.moveToPosition(cc);
+            //menerima input nilai
             daftar[cc] = "Kode Sewa :\t"+cursor.getString(0).toString() +""+cursor.getString(1).toString() + "\nTanggal\t:\t" + cursor.getString(2).toString()+ "\n" + cursor.getString(3).toString()+
                     " Menyewa Kamera "+cursor.getString(4).toString() + "\nselama " + cursor.getString(6).toString()+ " hari, dengan potongan Harga sebanyak " + cursor.getString(5).toString()+ "%\nTotal Pembayaran\t:\t" + cursor.getString(7).toString()+"\n";
 
-            ls3 = findViewById(R.id.ls3);
-            ls3.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1, daftar));
+            ls3 = findViewById(R.id.ls3);//memanggil id layout
+            ls3.setAdapter(new ArrayAdapter(this, android.R.layout.simple_list_item_1, daftar));//mengkonversikan data menjadi array
             ls3.setSelected(true);
             ls3.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -71,18 +75,19 @@ public class RentalActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int item) {
                             switch (item) {
+                                //membuat fungsi mengembalikan data
                                 case 0:
-                                SQLiteDatabase dba = dbcenter.getWritableDatabase();
-                                dba.execSQL("UPDATE kamera SET status = 'y' WHERE id_kamera = '"+idm+"'");
-                                RefreshList2();
-                                Toast.makeText(getApplicationContext(), "Motor Telah Dikembalikan", Toast.LENGTH_SHORT).show();
+                                SQLiteDatabase dba = dbcenter.getWritableDatabase();//menulis kembali ke database
+                                dba.execSQL("UPDATE kamera SET status = 'y' WHERE id_kamera = '"+idm+"'");//membuat query eksekusi tabel kamera
+                                RefreshList2();//memanggil refreshlist
+                                Toast.makeText(getApplicationContext(), "Motor Telah Dikembalikan", Toast.LENGTH_SHORT).show();//memberi pesan dengan toast
                                 break;
 
                                 case 1:
-                                SQLiteDatabase db = dbcenter.getWritableDatabase();
-                                db.execSQL("DELETE FROM sewa WHERE id_sewa = '" + id + "'");
-                                RefreshList2();
-                                Toast.makeText(getApplicationContext(), "Data Berhasil Dihapus", Toast.LENGTH_SHORT).show();
+                                SQLiteDatabase db = dbcenter.getWritableDatabase();//menulis data untuk menghapus
+                                db.execSQL("DELETE FROM sewa WHERE id_sewa = '" + id + "'");//membuat query mengeksekusi tabel sewa
+                                RefreshList2();//memanggil refreshlist
+                                Toast.makeText(getApplicationContext(), "Data Berhasil Dihapus", Toast.LENGTH_SHORT).show();//memberi pesan dengan toast
                                 break;
                             }
                         }

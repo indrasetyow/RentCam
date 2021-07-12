@@ -36,62 +36,66 @@ import java.util.Locale;
 
 public class CetakSewaActivity extends AppCompatActivity {
 
-    TextView idpenyewa, nama, notelp, alamat, idmotor, namo, lama, promo, total, tgl, harga, prtotal;
-    Button cetak;
-    String sTot, sTot1, sHarga,sHarga1, sPromo, sLama, sprTot;
-    int iLama, iHarga,  iSub, iPromo;
-    double dPromo, dTotal, dsubP, dLama, dHarga;
-    protected Cursor cursor, cursor1;
-    DataHelper dbHelper;
+    TextView idpenyewa, nama, notelp, alamat, idmotor, namo, lama, promo, total, tgl, harga, prtotal;//mendeklarasikan textview
+    Button cetak;//mendeklarasikan button
+    String sTot, sTot1, sHarga,sHarga1, sPromo, sLama, sprTot;//mendeklarasikan String
+    int iLama, iHarga,  iSub, iPromo;//menginisialisasikan nilai integer
+    double dPromo, dTotal, dsubP, dLama, dHarga;//menginisialiasikan double
+    protected Cursor cursor, cursor1;//menginisialisasikan cursor
+    DataHelper dbHelper;//mendeklarasikan database
 
-    Bitmap bitmap, scaleBitmap;
-    int pageWidth = 1200;
-    Date dateTime;
-    DateFormat dateFormat;
+    Bitmap bitmap, scaleBitmap;//mendeklasrasikan bitmap
+    int pageWidth = 1200;//mendeklarasikann nilai page
+    Date dateTime;//mendeklarasik tanggal
+    DateFormat dateFormat;//mendeklarasikan format tanggal
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cetak_sewa);
+        setContentView(R.layout.activity_cetak_sewa);//memanggil activity cetak sewa
 
-        idpenyewa = findViewById(R.id.tvidPenyewa);
-        nama = findViewById(R.id.tvnmPenyewa);
-        notelp = findViewById(R.id.tvnoPenyewa);
-        alamat = findViewById(R.id.tvalPenyewa);
-        idmotor = findViewById(R.id.tvidMotor);
-        namo = findViewById(R.id.tvMotor);
-        lama = findViewById(R.id.tvLama);
-        promo = findViewById(R.id.tvPromo);
-        prtotal = findViewById(R.id.tvPrTotal);
-        total = findViewById(R.id.tvTotal);
-        tgl = findViewById(R.id.tvTgl);
-        harga = findViewById(R.id.tvHarga);
-        cetak = findViewById(R.id.btnPrint);
+        idpenyewa = findViewById(R.id.tvidPenyewa);//memanggil id layout
+        nama = findViewById(R.id.tvnmPenyewa);//memanggil id layout
+        notelp = findViewById(R.id.tvnoPenyewa);//memanggil id layout
+        alamat = findViewById(R.id.tvalPenyewa);//memanggil id layout
+        idmotor = findViewById(R.id.tvidMotor);//memanggil id layout
+        namo = findViewById(R.id.tvMotor);//memanggil id layout
+        lama = findViewById(R.id.tvLama);//memanggil id layout
+        promo = findViewById(R.id.tvPromo);//memanggil id layout
+        prtotal = findViewById(R.id.tvPrTotal);//memanggil id layout
+        total = findViewById(R.id.tvTotal);//memanggil id layout
+        tgl = findViewById(R.id.tvTgl);//memanggil id layout
+        harga = findViewById(R.id.tvHarga);//memanggil id layout
+        cetak = findViewById(R.id.btnPrint);//memanggil id layout
 
-        tgl.setText(getIntent().getStringExtra("tgl"));
-        idpenyewa.setText(getIntent().getStringExtra("idp"));
-        idmotor.setText(getIntent().getStringExtra("idm"));
-        lama.setText(getIntent().getStringExtra("m")+" Hari");
-        sPromo = getIntent().getStringExtra("po");
+        tgl.setText(getIntent().getStringExtra("tgl"));//mendeklarasikan id tanggal
+        idpenyewa.setText(getIntent().getStringExtra("idp"));//mendeklarasikan id penyewa
+        idmotor.setText(getIntent().getStringExtra("idm"));//mendekalarasikan id kamera
+        lama.setText(getIntent().getStringExtra("m")+" Hari");//mendeklarasikan lama hari
+        sPromo = getIntent().getStringExtra("po");//mendeklarasikan promo
 
-        getSupportActionBar().setTitle("Cetak Nota Pembayaran");
+        getSupportActionBar().setTitle("Cetak Nota Pembayaran");//memberi judul halaman activity
 
-        dbHelper = new DataHelper(this);
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        cursor = db.rawQuery("SELECT * FROM kamera WHERE id_kamera = '" + getIntent().getStringExtra("idm") +"'", null);
+        //mengambil data dari tabel kamera
+        dbHelper = new DataHelper(this);//memanggil database
+        SQLiteDatabase db = dbHelper.getReadableDatabase();//membaca database
+        cursor = db.rawQuery("SELECT * FROM kamera WHERE id_kamera = '" + getIntent().getStringExtra("idm") +"'", null);//mengeksekusu tabel kamera dan membaca id kamera
         cursor.moveToFirst();
+        //mengembalikan nilai
         if (cursor.getCount()>0){
             cursor.moveToPosition(0);
             namo.setText(cursor.getString(1).toString());
             sHarga = cursor.getString(2).toString();
-            sHarga1 = formatRupiah(Double.parseDouble(sHarga));
+            sHarga1 = formatRupiah(Double.parseDouble(sHarga));//memanggil function formatrupiah
             harga.setText(sHarga1);
 
         }
 
-        SQLiteDatabase db1 = dbHelper.getReadableDatabase();
-        cursor1 = db1.rawQuery("SELECT * FROM penyewa WHERE id = '" + getIntent().getStringExtra("idp") +"'", null);
+        //mengambil data dari tabel penyewa
+        SQLiteDatabase db1 = dbHelper.getReadableDatabase();//deklarasi membaca database
+        cursor1 = db1.rawQuery("SELECT * FROM penyewa WHERE id = '" + getIntent().getStringExtra("idp") +"'", null);//mengeksekusi tabel penyewa dan id
         cursor1.moveToFirst();
+        //mengembalikan nilai
         if (cursor1.getCount()>0){
             cursor1.moveToPosition(0);
             nama.setText(cursor1.getString(1).toString());
@@ -99,7 +103,7 @@ public class CetakSewaActivity extends AppCompatActivity {
             notelp.setText(cursor1.getString(3).toString());
         }
 
-//        sHarga = harga.getText().toString();
+        //mengakumulasi harga, lama sewa, dan harga promo
         iHarga =Integer.parseInt(sHarga.replaceAll("[\\D]", ""));
         dHarga = Double.parseDouble(sHarga.replaceAll("[\\D]", ""));
         sLama = lama.getText().toString();
@@ -123,7 +127,7 @@ public class CetakSewaActivity extends AppCompatActivity {
         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.icon_tks);
         scaleBitmap = Bitmap.createScaledBitmap(bitmap, 1200, 518, false);
 
-        //permission
+        //membuat permission
         ActivityCompat.requestPermissions(this, new String[]{
                 Manifest.permission.WRITE_EXTERNAL_STORAGE}, PackageManager.PERMISSION_GRANTED);
 
@@ -132,14 +136,14 @@ public class CetakSewaActivity extends AppCompatActivity {
 
     private void createPDF() {
         cetak.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+            @RequiresApi(api = Build.VERSION_CODES.KITKAT)//membuat minimum API versi Android KITKAT
             @SuppressLint("SimpleDateFormat")
             @Override
             public void onClick(View v) {
 
-                dateTime = new Date();
+                dateTime = new Date();//mendeklarasikan tanggal
 
-                //get input
+                //mendapatkan input
                 if (idmotor.getText().toString().length() == 0 ||
                         idpenyewa.getText().toString().length() == 0 ||
                         lama.getText().toString().length() == 0 ||
@@ -150,6 +154,7 @@ public class CetakSewaActivity extends AppCompatActivity {
                     Paint paint = new Paint();
                     Paint titlePaint = new Paint();
 
+                    //membuat fungsi data tersimpan dalam PDF
                     PdfDocument.PageInfo pageInfo
                             = new PdfDocument.PageInfo.Builder(1200, 2010, 1).create();
                     PdfDocument.Page page = pdfDocument.startPage(pageInfo);
@@ -230,8 +235,8 @@ public class CetakSewaActivity extends AppCompatActivity {
 
                     pdfDocument.finishPage(page);
 
-                    dateFormat = new SimpleDateFormat("yyMMddHHmm");
-                    File file = new File(Environment.getExternalStorageDirectory(), "/"+ dateFormat.format(dateTime)+" Rental Kamera.pdf");
+                    dateFormat = new SimpleDateFormat("yyMMddHHmm");//mengatur format tanggal
+                    File file = new File(Environment.getExternalStorageDirectory(), "/"+ dateFormat.format(dateTime)+" Rental Kamera.pdf");//mengatur format file
                     try {
                         pdfDocument.writeTo(new FileOutputStream(file));
                     } catch (IOException e) {
@@ -239,8 +244,8 @@ public class CetakSewaActivity extends AppCompatActivity {
                     }
 
                     pdfDocument.close();
-                    SQLiteDatabase dbH = dbHelper.getWritableDatabase();
-                    dbH.execSQL("INSERT INTO sewa (id_sewa, tgl, id, id_kamera, promo, lama, total) VALUES ('" +
+                    SQLiteDatabase dbH = dbHelper.getWritableDatabase();//menulis data kedalam database
+                    dbH.execSQL("INSERT INTO sewa (id_sewa, tgl, id, id_kamera, promo, lama, total) VALUES ('" +//mengeksekusi insert kedalam tabel sewa
                             dateFormat.format(dateTime) + "','" +
                             tgl.getText().toString() + "','" +
                             getIntent().getStringExtra("idp") + "','" +
@@ -248,16 +253,17 @@ public class CetakSewaActivity extends AppCompatActivity {
                             sPromo + "','" +
                             iLama + "','" +
                             sTot + "');");
-                    dbH.execSQL("UPDATE kamera SET status = 'n' WHERE id_kamera ='"+getIntent().getStringExtra("idm")+"';");
-                    RentalActivity.mi.RefreshList2();
-                    Toast.makeText(getApplicationContext(), "Penyewaan kamera Berhasil, dan Nota Pembayaran sudah dibuat", Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(CetakSewaActivity.this, MainActivity.class));
+                    dbH.execSQL("UPDATE kamera SET status = 'n' WHERE id_kamera ='"+getIntent().getStringExtra("idm")+"';");//mengeksekusi query update tabel kamera
+                    RentalActivity.mi.RefreshList2();//memanggil activity rental
+                    Toast.makeText(getApplicationContext(), "Penyewaan kamera Berhasil, dan Nota Pembayaran sudah dibuat", Toast.LENGTH_LONG).show();//memberikan pesan toast
+                    startActivity(new Intent(CetakSewaActivity.this, MainActivity.class));//memulai activity
                 }
             }
         });
 
     }
 
+    //membuat function format rupiah
     private String formatRupiah(Double number){
         Locale localeID = new Locale("in", "ID");
         NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(localeID);

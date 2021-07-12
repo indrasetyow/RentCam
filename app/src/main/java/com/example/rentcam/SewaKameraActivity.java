@@ -20,35 +20,37 @@ import java.util.List;
 
 public class SewaKameraActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
-    TextView lama;
-    RadioGroup promo;
-    RadioButton weekday, weekend;
-    Button sewa, tambah, kurang;
+    TextView lama;//mendeklarasikan textview
+    RadioGroup promo;//mendeklarasikan radiogroup promo
+    RadioButton weekday, weekend;//mendeklarasikan radiobutton weekday dan weekend
+    Button sewa, tambah, kurang;//mendeklarasikan button sewa, tambah, dan kurang
 
-    String sPenyewa, sMotor, sLama, idmotor, idpenyewa, tanggal, sMot, sPromo;
+    String sPenyewa, sMotor, sLama, idmotor, idpenyewa, tanggal, sMot, sPromo;//membuat parameter
 
-    private Spinner spinner, spinner1;
-    DataHelper dbHelper;
+    private Spinner spinner, spinner1;//menginisialisasikan sipinner
+    DataHelper dbHelper;//mendeklarasikan pemanggilan database
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sewa_kamera);
+        setContentView(R.layout.activity_sewa_kamera);//memanggil layout sewa kamera
 
-        getSupportActionBar().setTitle("Sewa Kamera");
+        getSupportActionBar().setTitle("Sewa Kamera");//memberi judul halaman activity
 
-        dbHelper = new DataHelper(this);
+        dbHelper = new DataHelper(this);//memanggil database
 
-        spinner = findViewById(R.id.spinner);
-        spinner1 = findViewById(R.id.spinner1);
-        sewa = findViewById(R.id.btnSewa);
-        promo = findViewById(R.id.promoGroup);
-        weekday = findViewById(R.id.rbWeekDay);
-        weekend = findViewById(R.id.rbWeekEnd);
-        lama = findViewById(R.id.lmsw);
-        tambah = findViewById(R.id.bttambah);
-        kurang = findViewById(R.id.btkurang);
-        tambah.setOnClickListener(new View.OnClickListener() {
+        spinner = findViewById(R.id.spinner);//memanggil layout id spinner
+        spinner1 = findViewById(R.id.spinner1);//memanggil layout id spinner1
+        sewa = findViewById(R.id.btnSewa);//memanggil layout id btnsewa
+        promo = findViewById(R.id.promoGroup);//memanggil layout id promogroup
+        weekday = findViewById(R.id.rbWeekDay);//memanggil layout id radiobutton weekday
+        weekend = findViewById(R.id.rbWeekEnd);//memanggil layout id radiobutton weekend
+        lama = findViewById(R.id.lmsw);//memanggil layout id lamasewa
+        tambah = findViewById(R.id.bttambah);//memanggil layout id tambah
+        kurang = findViewById(R.id.btkurang);//memanggil layout id kurang
+        tambah.setOnClickListener(new View.OnClickListener()
+        //membuat fungsi button tambah
+        {
             @Override
             public void onClick(View v) {
                 int a = Integer.valueOf(lama.getText().toString());
@@ -56,6 +58,7 @@ public class SewaKameraActivity extends AppCompatActivity implements AdapterView
                 lama.setText(String.valueOf(a));
             }
         });
+        //membuat fungsi button kurang
         kurang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,29 +68,30 @@ public class SewaKameraActivity extends AppCompatActivity implements AdapterView
             }
         });
 
-        Calendar c = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar c = Calendar.getInstance();//membuat paramnmeter calendar
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");//mengatur format tanggal calendar
         tanggal = df.format(c.getTime());
 
         spinner.setOnItemSelectedListener(this);
         spinner1.setOnItemSelectedListener(this);
 
-        loadSpinnerDataMotor();
-        loadSpinnerDataPenyewa();
+        loadSpinnerDataMotor();//memanggil function spinner kamera
+        loadSpinnerDataPenyewa();//memanggil function spinnernpenyewa
 
 
+        //membuat fungsi button sewa
         sewa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Float.valueOf(lama.getText().toString()) < 1) {
-                    Toast.makeText(SewaKameraActivity.this, "Lama Sewa harus lebih dari 0", Toast.LENGTH_SHORT).show();
+                if (Float.valueOf(lama.getText().toString()) < 1) { //apabila lama sewa kurang 1 hari
+                    Toast.makeText(SewaKameraActivity.this, "Lama Sewa harus lebih dari 0", Toast.LENGTH_SHORT).show();//maka muncul pesan toast
                 } else {
-                    sLama = lama.getText().toString();
+                    sLama = lama.getText().toString();//menginput data
 
                     if (weekday.isChecked()) {
-                        sPromo = "0.25";
+                        sPromo = "0.25";//membuat nilai potongan harga 25%
                     } else if (weekend.isChecked()) {
-                        sPromo = "0.1";
+                        sPromo = "0.1";//membuat nilai ptongan harga 10%
                     }
 
                     Intent sw = new Intent(getApplicationContext(), CetakSewaActivity.class);
@@ -102,11 +106,12 @@ public class SewaKameraActivity extends AppCompatActivity implements AdapterView
         });
     }
 
+    //membuat fungsii spinner kamera
     private void loadSpinnerDataMotor() {
         DataHelper db = new DataHelper(getApplicationContext());
-        List<String> categories = db.semuaKamera();
+        List<String> categories = db.semuaKamera();//memanggil parameter database
 
-        final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+        final ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);//mengubah data menjadi array
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -127,11 +132,12 @@ public class SewaKameraActivity extends AppCompatActivity implements AdapterView
 
     }
 
+    //membuat fungsi spinner penyewa
     private void loadSpinnerDataPenyewa() {
-        DataHelper db = new DataHelper(getApplicationContext());
-        List<String> categories = db.semuaPenyewa();
+        DataHelper db = new DataHelper(getApplicationContext());//memanggil database
+        List<String> categories = db.semuaPenyewa();//memanggil parameter database
 
-        ArrayAdapter<String> dataAdapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+        ArrayAdapter<String> dataAdapter1 = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);//mengubah data menjadi array
         dataAdapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner1.setAdapter(dataAdapter1);
         spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

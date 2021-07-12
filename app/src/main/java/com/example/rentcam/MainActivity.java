@@ -15,21 +15,21 @@ import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
-    ImageButton tvMotor, tvSewa, tvPenyewa, tvRental;
-    TextView tvini;
-    String hariIni;
+    ImageButton tvMotor, tvSewa, tvPenyewa, tvRental;//mendeklarasikan imagebutton
+    TextView tvini;//mendeklarasikan textview
+    String hariIni;//mendeklarasikan pada tanggal
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        tvMotor = findViewById(R.id.btnMotor);
-        tvSewa = findViewById(R.id.btnSewa);
-        tvPenyewa = findViewById(R.id.btnPenyewa);
-        tvRental = findViewById(R.id.btnRental);
-        tvini = findViewById(R.id.tvDate);
-
+        setContentView(R.layout.activity_main);//memanggil layout activity main
+//membaca atribut pada layout
+        tvMotor = findViewById(R.id.btnMotor);//memanggil id layout buttonkamera
+        tvSewa = findViewById(R.id.btnSewa);//memanggil id layout buttonsewa
+        tvPenyewa = findViewById(R.id.btnPenyewa);//memanggil id layout buttonpenyewa
+        tvRental = findViewById(R.id.btnRental);//memanggil id layout buttonrental
+        tvini = findViewById(R.id.tvDate);//memanggil id layout textview tanggal
+//fungsi tanggal
         Date dateNow = Calendar.getInstance().getTime();
         hariIni = (String) DateFormat.format("EEEE", dateNow);
         if (hariIni.equalsIgnoreCase("sunday")) {
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         getToday();
-
+//memanggil bundle dari data kamera
         tvMotor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
             }
         });
-
+//memanggil bundle dari sewa kamera
         tvSewa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(j);
             }
         });
-
+//memanggil bundle dari Data Penyewa
         tvPenyewa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(k);
             }
         });
-
+//memanggil bundle dari rental kamera
         tvRental.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,12 +82,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
+//membuuat parameter untuk fungsi Date
     private void getToday() {
         Date date = Calendar.getInstance().getTime();
-        String tanggal = (String) DateFormat.format("d", date);
-        String monthNumber = (String) DateFormat.format("M", date);
-        String year = (String) DateFormat.format("yyyy", date);
+        String tanggal = (String) DateFormat.format("d", date);//membuat fungsi tangggal hari
+        String monthNumber = (String) DateFormat.format("M", date);//membuat fungsi tangggal bulan
+        String year = (String) DateFormat.format("yyyy", date);//membuat fungsi tangggal tahun
 
         int month = Integer.parseInt(monthNumber);
         String bulan = null;
